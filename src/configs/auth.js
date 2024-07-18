@@ -1,6 +1,6 @@
 module.exports = {
     jwt: {
-      secret: "defaultmangalargamarchador",
-      expiresIn: "1d",
-    },
-  };
+        secret: process.env.AUTH_SECRET || "default",
+        expiresIn: "1d"
+    }
+}
