@@ -27,9 +27,9 @@ class UsersController {
 
         const hashedPassword = await hash(password, 8);
 
-        await knex("users").insert({ state, login, password: hashedPassword, privilege, name, phone, gender, CPF, born, email, pix, favored, bank, agency, account });
+        const [userId] = await knex("users").insert({ state, login, password: hashedPassword, privilege, name, phone, gender, CPF, born, email, pix, favored, bank, agency, account }).returning('id');
 
-        return response.status(201).json();
+        return response.status(201).json({ id: userId });
     }
 
     async show(request, response) {
@@ -42,8 +42,12 @@ class UsersController {
     }
 
     async index(request, response) {
+        const { name } = request.query;
 
-        const users = await knex("users");
+        const users = await knex("users")
+        .whereLike("name", `%${name.replace(/\s/g, '%')}%`)
+        .orderBy("name");
+
         const Users = users.map(user => {
             const userWithoutPassword = user;
 
