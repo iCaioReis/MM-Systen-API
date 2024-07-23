@@ -62,6 +62,16 @@ class UsersController {
     async update(request, response) {
         const { state, login, password, privilege, name, phone, gender, CPF, born, email, pix, favored, bank, agency, account } = request.body;
 
+        if (!login) {
+            throw new AppError("O campo Login é obrigatório.", 400);
+        }
+        if (!name) {
+            throw new AppError("O campo Nome é obrigatório.", 400);
+        }
+        if (!phone) {
+            throw new AppError("O campo Telefone é obrigatório.", 400);
+        }
+    
         const userUpdated = { state, login, password, privilege, name, phone, gender, CPF, born, email, pix, favored, bank, agency, account };
         const { id } = request.params;
 
