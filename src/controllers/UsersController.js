@@ -77,7 +77,6 @@ class UsersController {
 
         const user = await knex("users").where({ id }).first();
 
-    
         if (!password){
             userUpdated.password = user.password;
         } else {

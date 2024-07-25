@@ -3,25 +3,85 @@ const AppError = require("../utils/AppError");
 
 class CompetitorsController {
     async create(request, response) {
-        const competitor = request.body;
+        const {
+            state,
+            surname,
+            name,
+            gender,
+        
+            CPF,
+            born,
+            category,
+            category_date,
+        
+            phone,
+            email,
+        
+            address,
+            address_number,
+            address_neighborhood,
+            address_city,
+            address_uf,
+            address_country,
+        
+            pix,
+            favored,
+        
+            bank,
+            agency,
+            account
+        } = request.body;
 
-        if (!competitor.surname) {
+        if (!surname) {
             throw new AppError("O campo Apelido é obrigatório.", 400);
         }
 
-        if (!competitor.name) {
+        if (!name) {
             throw new AppError("O campo Nome é obrigatório.", 400);
         }
 
-        if (!competitor.CPF) {
+        if (!CPF || CPF == "___.___.___-__") {
             throw new AppError("O campo CPF é obrigatório.", 400);
         }
 
-        if (!competitor.born) {
+        if (!born) {
             throw new AppError("O campo Nascimento é obrigatório.", 400);
         }
 
-        const [competitorId] = await knex("competitors").insert(competitor).returning('id');
+        const checkCompetitorExists = await knex("competitors").where({ CPF: CPF });
+
+        if (checkCompetitorExists.length > 0) {
+            throw new AppError("Este CPF já está cadastrado!");
+        }
+
+        const [competitorId] = await knex("competitors").insert({
+            state,
+            surname,
+            name,
+            gender,
+        
+            CPF,
+            born,
+            category,
+            category_date,
+        
+            phone,
+            email,
+        
+            address,
+            address_number,
+            address_neighborhood,
+            address_city,
+            address_uf,
+            address_country,
+        
+            pix,
+            favored,
+        
+            bank,
+            agency,
+            account
+        }).returning('id');
 
         return response.status(201).json({ id: competitorId });
     }
@@ -45,21 +105,45 @@ class CompetitorsController {
     }
 
     async update(request, response) {
-        const competitorUpdated = request.body;
+        const {
+            state,
+            surname,
+            name,
+            gender,
+        
+            CPF,
+            born,
+            category,
+            category_date,
+        
+            phone,
+            email,
+        
+            address,
+            address_number,
+            address_neighborhood,
+            address_city,
+            address_uf,
+            address_country,
+        
+            pix,
+            favored,
+        
+            bank,
+            agency,
+            account
+        } = request.body;
 
-        if (!competitorUpdated.surname) {
+        if (!surname) {
             throw new AppError("O campo Apelido é obrigatório.", 400);
         }
-
-        if (!competitorUpdated.name) {
+        if (!name) {
             throw new AppError("O campo Nome é obrigatório.", 400);
         }
-
-        if (!competitorUpdated.CPF) {
+        if (!CPF || CPF == "___.___.___-__") {
             throw new AppError("O campo CPF é obrigatório.", 400);
         }
-
-        if (!competitorUpdated.born) {
+        if (!born) {
             throw new AppError("O campo Nascimento é obrigatório.", 400);
         }
 
@@ -71,9 +155,36 @@ class CompetitorsController {
             throw new AppError("Competidor não encontrado!");
         }
 
-        await knex("competitors").update(competitorUpdated).where({ id: id });
+        await knex("competitors").update({
+            state,
+            surname,
+            name,
+            gender,
+        
+            CPF,
+            born,
+            category,
+            category_date,
+        
+            phone,
+            email,
+        
+            address,
+            address_number,
+            address_neighborhood,
+            address_city,
+            address_uf,
+            address_country,
+        
+            pix,
+            favored,
+        
+            bank,
+            agency,
+            account
+        }).where({ id: id });
 
-        return response.json(competitorUpdated);
+        return response.json(competitor);
     }
 }
 
