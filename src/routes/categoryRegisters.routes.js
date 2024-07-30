@@ -10,6 +10,7 @@ const categoryRegistersController = new CategoryRegistersController();
 categoryRegistersRoutes.post("/", categoryRegistersController.create);
 //categoryRegistersRoutes.get("/", categoryRegistersController.index);
 categoryRegistersRoutes.get("/:id", categoryRegistersController.show);
+categoryRegistersRoutes.delete("/:id", categoryRegistersController.delete);
 //categoryRegistersRoutes.put("/:id", categoryRegistersController.update);
 
 module.exports = categoryRegistersRoutes;
