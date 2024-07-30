@@ -2,6 +2,7 @@ const knex = require("../database/knex");
 const AppError = require("../utils/AppError");
 
 class CategoriesController {
+    
     async update(req, res){
         const { id } = req.params;
         const { state } = req.body;
@@ -10,7 +11,6 @@ class CategoriesController {
 
         return res.json();
     }
-    
 }
 
 module.exports = CategoriesController;
