@@ -1,65 +1,55 @@
 const knex = require("../database/knex");
 const AppError = require("../utils/AppError");
 
-class CategoryRegisterController {
-    async create(request, response) {
-        const { competitor_id, horse_id, categorie_id } = request.body;
-
-        if (!competitor_id) {
-            throw new AppError("O campo Competidor é obrigatório.", 400);
-        }
-        if (!horse_id) {
-            throw new AppError("O campo Cavalo é obrigatório.", 400);
-        }
-        if (!categorie_id) {
-            throw new AppError("Erro ao tentar registrar", 400);
-        }
-
-        const [horseId] = await knex("competitor-horse-categorie").insert({ competitor_id, horse_id, categorie_id }).returning('id');
-
-        return response.status(201).json({ id: horseId });
-    }
-
+class CompetitionController {
     async show(request, response) {
         const { id } = request.params;
+
         try {
-            // Realiza a consulta para obter os dados da categoria e da prova
-            const category = await knex("categories")
-                .join("proofs", "categories.proof_id", "proofs.id")
-                .where("categories.id", id)
-                .select(
-                    "categories.name as categorie_name", // Nome da categoria
-                    "categories.state as categorie_state", // Estado da categoria
-                    "categories.last_competitor", // Último competidor
-                    "proofs.name as proof_name" // Nome da prova
-                )
-                .first(); // Esperamos apenas um resultado
-    
-            // Realiza a consulta para obter os dados dos competidores e cavalos
-            const competitorHorses = await knex("competitor-horse-categorie")
-                .join("competitors", "competitor-horse-categorie.competitor_id", "competitors.id")
-                .join("horses", "competitor-horse-categorie.horse_id", "horses.id")
-                .where("competitor-horse-categorie.categorie_id", id)
-                .select(
-                    "competitor-horse-categorie.*", // Dados da tabela principal
-                    "competitors.name as competitor_name", // Dados dos competidores
-                    "horses.name as horse_name" // Dados dos cavalos
-                )
-                .orderBy("competitor_order");
-    
-            return response.json({ status: category, competitorHorses });
+            const event = await knex("events").where({ id }).first();
+
+            if (!event) {
+                throw new AppError("Evento não encontrado.", 404);
+            }
+
+            const proofs = await knex("proofs").where({ event_id: id });
+            const proofsWithCategories = await Promise.all(
+                proofs.map(async (proof) => {
+                    const categories = await knex("categories").where({ proof_id: proof.id });
+
+                    const categoriesWithCompetitorCount = await Promise.all(
+                        categories.map(async (category) => {
+                            const competitorCount = await knex("competitor-horse-categorie")
+                                .where({ categorie_id: category.id })
+                                .count("id as count")
+                                .first();
+
+                            return { ...category, competitorCount: competitorCount.count };
+                        })
+                    );
+
+                    return { ...proof, categories: categoriesWithCompetitorCount };
+                })
+            );
+
+            event.proofs = proofsWithCategories;
+
+            return response.json(event);
         } catch (error) {
             console.error(error);
-            return response.status(500).json({ error: "Internal Server Error" });
+            throw new AppError("Erro ao buscar o evento.", 500);
         }
     }
 
-    async delete(request, response){
-        const { id } = request.params;
+    async index(request, response) {
+        const { name } = request.query;
 
-        await knex("competitor-horse-categorie").where({id}).delete();
+        const events = await knex("events")
+            .whereNotIn("state", ["making_registrations", "active", "inactive"])
+            .whereLike("name", `%${name.replace(/\s/g, '%')}%`)
+            .orderBy("name");
 
-        return response.json();
+        return response.json({ events })
     }
 
     async update(request, response) {
@@ -185,4 +175,4 @@ class CategoryRegisterController {
     }
 }
 
-module.exports = CategoryRegisterController;
+module.exports = CompetitionController;
