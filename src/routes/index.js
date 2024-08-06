@@ -7,6 +7,7 @@ const eventsRouter = require("./events.routes");
 const categoryRouter = require("./category.routes");
 const competitorsRouter = require("./competitors.routes");
 const competitionRouter = require("./competition.routes");
+const registersJudgeRouter = require("./RegistersJudge.routes");
 const categoryRegistersRouter = require("./categoryRegisters.routes");
 
 const routes = Router();
@@ -18,7 +19,9 @@ routes.use('/events', eventsRouter);
 routes.use('/categories', categoryRouter);
 routes.use('/competitors', competitorsRouter);
 routes.use('/competition', competitionRouter);
+routes.use('/registersJudge', registersJudgeRouter);
 routes.use('/categoryRegisters', categoryRegistersRouter);
+
 
 
 module.exports = routes;

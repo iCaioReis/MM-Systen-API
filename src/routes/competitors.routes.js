@@ -21,3 +21,4 @@ competitorsRoutes.put("/:id", competitorsController.update);
 //competitorsRoutes.patch("/avatar", ensureAuthenticated, upload.single("avatar"), competitorAvatarContoller.update)
 
 module.exports = competitorsRoutes;
+module.exports = competitorsRoutes;
