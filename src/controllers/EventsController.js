@@ -39,6 +39,7 @@ class EventsController {
                 const categories = categoryNames.map(name => ({
                     state: 'active',
                     name,
+                    last_competitor: 0,
                     proof_id: proof.id
                 }));
 
