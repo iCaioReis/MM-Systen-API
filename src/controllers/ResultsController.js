@@ -13,7 +13,7 @@ class ResultsController {
             }
 
             const proofs = await knex("proofs").where({ event_id: id });
-            
+
             const proofsWithCategories = await Promise.all(
                 proofs.map(async (proof) => {
                     const categories = await knex("categories").where({ proof_id: proof.id });
@@ -30,8 +30,10 @@ class ResultsController {
                                     "c.name as competitor_name",
                                     "h.name as horse_name",
                                     "f.name as foul_name",
-                                    "f.amount as foul_amount"
+                                    "f.amount as foul_amount",
+                                    "chc.time"
                                 );
+
 
                             const competitorDetails = competitorDetailsRaw.reduce((acc, row) => {
                                 const competitorId = row.competitor_id;
@@ -41,6 +43,7 @@ class ResultsController {
                                         id: competitorId,
                                         competitor_name: row.competitor_name,
                                         horse_name: row.horse_name,
+                                        time: row.time, // Adiciona o campo 'time' ao objeto
                                         fouls: [],
                                     };
                                 }
@@ -54,6 +57,7 @@ class ResultsController {
 
                                 return acc;
                             }, {});
+
 
                             Object.values(competitorDetails).forEach(competitor => {
                                 competitor.fouls.sort((a, b) => a.name.localeCompare(b.name));
