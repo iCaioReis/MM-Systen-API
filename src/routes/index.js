@@ -12,6 +12,7 @@ const competitorsRouter = require("./competitors.routes");
 const competitionRouter = require("./competition.routes");
 const registersJudgeRouter = require("./RegistersJudge.routes");
 const categoryRegistersRouter = require("./categoryRegisters.routes");
+const allCategoryRegistersRouter = require("./proofCategoryRegisters.routes");
 
 
 const routes = Router();
@@ -28,5 +29,6 @@ routes.use('/competitors', competitorsRouter);
 routes.use('/competition', competitionRouter);
 routes.use('/registersJudge', registersJudgeRouter);
 routes.use('/categoryRegisters', categoryRegistersRouter);
+routes.use('/allCategoryRegisters', allCategoryRegistersRouter);
 
 module.exports = routes;
