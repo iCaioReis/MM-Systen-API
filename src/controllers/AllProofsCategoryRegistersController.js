@@ -34,7 +34,7 @@ class CategoryRegisterController {
 
         if (categories.length === 0) {
             throw new AppError("Erro ao tentar registrar, verifique o campo de categoria!", 404);
-        }
+        };
 
         // Inserir na tabela "competitor-horse-categorie" para cada categoria encontrada
         const insertedIds = [];

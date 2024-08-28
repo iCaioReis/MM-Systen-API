@@ -2,7 +2,6 @@ const knex = require("../database/knex");
 const AppError = require("../utils/AppError");
 
 class RegistersJudgeController {
-
     async update(request, response) {
         const { id } = request.params;
         const { time, state } = request.body;
