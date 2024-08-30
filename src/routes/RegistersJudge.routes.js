@@ -6,6 +6,7 @@ const RegistersJudgeRoutes = Router();
 
 const registersJudgeController = new RegistersJudgeController();
 
+RegistersJudgeRoutes.get("/:id", registersJudgeController.show);
 RegistersJudgeRoutes.put("/:id", registersJudgeController.update);
 
 module.exports = RegistersJudgeRoutes;
