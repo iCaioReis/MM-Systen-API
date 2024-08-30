@@ -45,7 +45,7 @@ class CompetitionController {
         const { name } = request.query;
 
         const events = await knex("events")
-            .whereNotIn("state", ["making_registrations", "active", "inactive"])
+            .whereNotIn("state", ["making_registrations", "active", "inative"]) 
             .whereLike("name", `%${name.replace(/\s/g, '%')}%`)
             .orderBy("name");
 

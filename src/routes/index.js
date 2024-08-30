@@ -2,7 +2,7 @@ const { Router } = require("express");
 
 const sessionsRouter = require("./sessions.routes");
 
-const foulRouter = require("./fouls.routes");
+//const foulRouter = require("./fouls.routes");
 const usersRouter = require("./users.routes");
 const horsesRouter = require("./horses.routes");
 const eventsRouter = require("./events.routes");
@@ -20,7 +20,7 @@ const routes = Router();
 
 routes.use("/sessions", sessionsRouter);
 
-routes.use('/fouls', foulRouter);
+//routes.use('/fouls', foulRouter);
 routes.use('/users', usersRouter);
 routes.use('/horses', horsesRouter);
 routes.use('/events', eventsRouter);
