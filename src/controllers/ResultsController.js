@@ -22,16 +22,16 @@ class ResultsController {
                         categories.map(async (category) => {
                             const competitorDetailsRaw = await knex("competitor-horse-categorie as chc")
                                 .where({ "chc.categorie_id": category.id })
-                                .leftJoin("fouls as f", "f.register_id", "chc.id")
                                 .leftJoin("competitors as c", "c.id", "chc.competitor_id")
                                 .leftJoin("horses as h", "h.id", "chc.horse_id")
                                 .select(
                                     "chc.id as competitor_id",
                                     "c.name as competitor_name",
                                     "h.name as horse_name",
-                                    "f.name as foul_name",
-                                    "f.amount as foul_amount",
-                                    "chc.time"
+                                    "chc.time",
+                                    "chc.fouls",
+                                    "chc.SAT",
+                                    "chc.NCP",
                                 );
 
 
@@ -44,24 +44,14 @@ class ResultsController {
                                         competitor_name: row.competitor_name,
                                         horse_name: row.horse_name,
                                         time: row.time, // Adiciona o campo 'time' ao objeto
-                                        fouls: [],
+                                        fouls: row.fouls,
+                                        SAT:row.SAT,
+                                        NCP: row.NCP
                                     };
-                                }
-
-                                if (row.foul_name) {
-                                    acc[competitorId].fouls.push({
-                                        name: row.foul_name,
-                                        amount: row.foul_amount,
-                                    });
                                 }
 
                                 return acc;
                             }, {});
-
-
-                            Object.values(competitorDetails).forEach(competitor => {
-                                competitor.fouls.sort((a, b) => a.name.localeCompare(b.name));
-                            });
 
                             return { ...category, competitors: Object.values(competitorDetails) };
                         })
