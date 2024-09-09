@@ -7,16 +7,20 @@ class UserAvatarControler {
         const {id, table} = request.body;
         const avatarFileName = request.file.filename;
         const diskStorage = new DiskStorage();
-
+        
         const record = await knex(table)
         .where({id: id}).first();
 
-        if(record.avatar){
-            await diskStorage.deleteFile(record.avatar);
+        if(!record) {
+            throw new AppError("Erro ao atualizar imagem", 400);
+        }
+
+        if(record.picture){
+            await diskStorage.deleteFile(record.picture);
         }
 
         const fileName = await diskStorage.saveFile(avatarFileName);
-        record.avatar = fileName;
+        record.picture = fileName;
 
         await knex(table).update(record).where({ id: id });
 
