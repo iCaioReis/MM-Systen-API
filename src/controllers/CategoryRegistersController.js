@@ -15,6 +15,18 @@ class CategoryRegisterController {
             throw new AppError("Erro ao tentar registrar", 400);
         }
 
+        const recordAlreadyExists = await knex("competitor-horse-categorie")
+        .where({
+            competitor_id,
+            horse_id,
+            categorie_id
+          })
+        .first();
+
+        if (recordAlreadyExists) {
+            throw new AppError("Já existe um registro com este competidor e cavalo nesta categoria!", 500);
+        }
+
         const [horseId] = await knex("competitor-horse-categorie").insert({ competitor_id, horse_id, categorie_id, competitor_order }).returning('id');
 
         return response.status(201).json({ id: horseId });

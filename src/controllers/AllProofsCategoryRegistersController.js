@@ -34,10 +34,22 @@ class CategoryRegisterController {
 
         if (categories.length === 0) {
             throw new AppError("Erro ao tentar registrar, verifique o campo de categoria!", 404);
-        };
+        }
+
+        // Validar se já existe algum registro na tabela "competitor-horse-categorie"
+        for (const category of categories) {
+            const existingEntry = await knex("competitor-horse-categorie")
+                .where({ competitor_id, horse_id, categorie_id: category.id })
+                .first();
+
+            if (existingEntry) {
+                throw new AppError("Registro já existente para o competidor, cavalo e categoria informados.", 409);
+            }
+        }
 
         // Inserir na tabela "competitor-horse-categorie" para cada categoria encontrada
         const insertedIds = [];
+        
         for (const category of categories) {
             const [id] = await knex("competitor-horse-categorie")
                 .insert({ competitor_id, horse_id, categorie_id: category.id })
@@ -46,7 +58,7 @@ class CategoryRegisterController {
             insertedIds.push(id);
         }
 
-        return response.status(201).json();
+        return response.status(201).json({ insertedIds });
     }
 }
 
