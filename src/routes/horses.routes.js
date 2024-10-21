@@ -16,6 +16,7 @@ horsesRoutes.post("/", horsesController.create);
 horsesRoutes.get("/", horsesController.index);
 horsesRoutes.get("/:id", horsesController.show);
 horsesRoutes.put("/:id", horsesController.update);
+horsesRoutes.delete("/:id", horsesController.delete);
 
 //horsesRoutes.put("/", ensureAuthenticated, horsesController.update)
 //horsesRoutes.patch("/avatar", ensureAuthenticated, upload.single("avatar"), horseAvatarContoller.update)

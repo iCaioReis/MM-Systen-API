@@ -51,7 +51,7 @@ class CompetitorsController {
         const checkCompetitorExists = await knex("competitors").where({ CPF: CPF });
 
         if (checkCompetitorExists.length > 0) {
-            throw new AppError("Este CPF já está cadastrado!");
+            throw new AppError("Este CPF já está cadastrado!", 422);
         }
 
         const [competitorId] = await knex("competitors").insert({
@@ -185,6 +185,14 @@ class CompetitorsController {
         }).where({ id: id });
 
         return response.json(competitor);
+    }
+
+    async delete(request, response){
+        const { id } = request.params;
+
+        await knex("competitors").where({id}).delete();
+
+        response.json();
     }
 }
 

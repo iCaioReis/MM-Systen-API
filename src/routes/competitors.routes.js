@@ -16,6 +16,7 @@ competitorsRoutes.post("/", competitorsController.create);
 competitorsRoutes.get("/", competitorsController.index);
 competitorsRoutes.get("/:id", competitorsController.show);
 competitorsRoutes.put("/:id", competitorsController.update);
+competitorsRoutes.delete("/:id", competitorsController.delete);
 
 //competitorsRoutes.put("/", ensureAuthenticated, competitorsController.update)
 //competitorsRoutes.patch("/avatar", ensureAuthenticated, upload.single("avatar"), competitorAvatarContoller.update)

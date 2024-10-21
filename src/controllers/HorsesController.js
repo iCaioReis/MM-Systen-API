@@ -76,6 +76,14 @@ class HorsesController {
 
         return response.json(horseUpdated);
     }
+
+    async delete(request, response){
+        const { id } = request.params;
+
+        const res = await knex("horses").where({id}).delete();
+
+        return response.json();
+    }
 }
 
 module.exports = HorsesController;

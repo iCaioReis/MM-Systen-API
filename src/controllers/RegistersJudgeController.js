@@ -16,16 +16,18 @@ class RegistersJudgeController {
                     "events.name as event_name",
                     "competitors.name as competitor_name",
                     "competitors.surname as competitor_surname",
+                    "competitors.picture as competitor_picture",
                     "horses.name as horse_name",
-                    "horses.surname as horse_surname"
+                    "horses.surname as horse_surname",
+                    "horses.picture as horse_picture"
                 )
                 .leftJoin("categories", "competitor-horse-categorie.categorie_id", "categories.id")
                 .leftJoin("proofs", "categories.proof_id", "proofs.id")
-                .leftJoin("events", "proofs.event_id", "events.id") // Join com a tabela events
+                .leftJoin("events", "proofs.event_id", "events.id")
                 .leftJoin("competitors", "competitor-horse-categorie.competitor_id", "competitors.id")
                 .leftJoin("horses", "competitor-horse-categorie.horse_id", "horses.id")
                 .where({ "competitor-horse-categorie.id": id })
-                .first(); // Use `first()` para obter um único registro
+                .first();
     
             if (!result) {
                 return response.status(404).json({ message: "Register not found" });
