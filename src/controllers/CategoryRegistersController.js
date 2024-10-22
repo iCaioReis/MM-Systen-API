@@ -46,8 +46,6 @@ class CategoryRegisterController {
                     "proofs.name as proof_name" // Nome da prova
                 )
                 .first(); // Esperamos apenas um resultado
-
-                
     
             // Realiza a consulta para obter os dados dos competidores e cavalos
             const competitorHorses = await knex("competitor-horse-categorie")
@@ -55,9 +53,11 @@ class CategoryRegisterController {
                 .join("horses", "competitor-horse-categorie.horse_id", "horses.id")
                 .where("competitor-horse-categorie.categorie_id", id)
                 .select(
-                    "competitor-horse-categorie.*", // Dados da tabela principal
-                    "competitors.name as competitor_name", // Dados dos competidores
-                    "horses.name as horse_name" // Dados dos cavalos
+                    "competitor-horse-categorie.*",
+                    "competitors.name as competitor_name",
+                    "competitors.surname as competitor_surname",
+                    "horses.name as horse_name",
+                    "horses.surname as horse_surname"
                 )
                 .orderBy("competitor_order");
     
