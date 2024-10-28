@@ -51,8 +51,22 @@ class CategoryRegisterController {
         const insertedIds = [];
         
         for (const category of categories) {
+            // Contar quantos registros já existem para a mesma categoria
+            const currentOrderCount = await knex("competitor-horse-categorie")
+                .where({ categorie_id: category.id })
+                .count("* as count")
+                .first();
+
+            const competitorOrder = currentOrderCount.count + 1; // Incrementar o valor da ordem
+
+            // Inserir o registro com o campo competitor_order
             const [id] = await knex("competitor-horse-categorie")
-                .insert({ competitor_id, horse_id, categorie_id: category.id })
+                .insert({ 
+                    competitor_id, 
+                    horse_id, 
+                    categorie_id: category.id, 
+                    competitor_order: competitorOrder // Adicionar o order
+                })
                 .returning('id');
 
             insertedIds.push(id);

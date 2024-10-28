@@ -3,7 +3,7 @@ const AppError = require("../utils/AppError");
 
 class HorsesController {
     async create(request, response) {
-        const { state, surname, name,  gender, record, born, owner, march } = request.body;
+        const { state, surname, name,  gender, record, born, owner, march, chip } = request.body;
 
         if (!surname) {
             throw new AppError("O campo Apelido é obrigatório.", 400);
@@ -21,7 +21,13 @@ class HorsesController {
             throw new AppError("O campo Marcha é obrigatório.", 400);
         }
 
-        const [horseId] = await knex("horses").insert({ state, surname, name,  gender, record, born, owner, march }).returning('id');
+        const horseChipAlreadyRegistered = await knex("horses").where({ chip: chip }).first();
+
+        if (horseChipAlreadyRegistered) {
+            throw new AppError("Este CHIP já está cadastrado!", 422);
+        }
+
+        const [horseId] = await knex("horses").insert({ state, surname, name,  gender, record, born, owner, march, chip }).returning('id');
 
         return response.status(201).json({ id: horseId });
     }
@@ -45,7 +51,7 @@ class HorsesController {
     }
 
     async update(request, response) {
-        const { state, surname, name,  gender, record, born, owner, march } = request.body;
+        const { state, surname, name,  gender, record, born, owner, march, chip } = request.body;
 
         if (!surname) {
             throw new AppError("O campo Apelido é obrigatório.", 400);
@@ -63,13 +69,19 @@ class HorsesController {
             throw new AppError("O campo Marcha é obrigatório.", 400);
         }
 
-        const horseUpdated = { state, surname, name,  gender, record, born, owner, march };
+        const horseUpdated = { state, surname, name,  gender, record, born, owner, march, chip };
         const { id } = request.params;
 
         const horse = await knex("horses").where({ id }).first();
 
+        const horseChipAlreadyRegistered = await knex("horses").where({ chip }).first();
+
         if (!horse) {
             throw new AppError("Cavalo não encontrado!");
+        };
+
+        if (horseChipAlreadyRegistered && horseChipAlreadyRegistered.id != id) {
+            throw new AppError("Este CHIP já está cadastrado!", 422);
         }
 
         await knex("horses").update(horseUpdated).where({ id: id });

@@ -28,13 +28,15 @@ class ResultsController {
                                     "chc.id as competitor_id",
                                     "c.name as competitor_name",
                                     "h.name as horse_name",
+                                    "h.chip as horse_chip",
+                                    "h.id as horse_id",
                                     "chc.time",
                                     "chc.fouls",
                                     "chc.SAT",
                                     "chc.NCP",
-                                );
-
-
+                                    "chc.competitor_order"
+                                )
+                                .orderBy("chc.competitor_order", "asc"); 
                             const competitorDetails = competitorDetailsRaw.reduce((acc, row) => {
                                 const competitorId = row.competitor_id;
 
@@ -43,10 +45,13 @@ class ResultsController {
                                         id: competitorId,
                                         competitor_name: row.competitor_name,
                                         horse_name: row.horse_name,
+                                        horse_id: row.horse_id,
+                                        horse_chip: row.horse_chip,
                                         time: row.time, // Adiciona o campo 'time' ao objeto
                                         fouls: row.fouls,
-                                        SAT:row.SAT,
-                                        NCP: row.NCP
+                                        SAT: row.SAT,
+                                        NCP: row.NCP,
+                                        competitor_order: row.competitor_order
                                     };
                                 }
 
@@ -60,12 +65,10 @@ class ResultsController {
                     return { ...proof, categories: categoriesWithCompetitorDetails };
                 })
             );
-
             event.proofs = proofsWithCategories;
 
             return response.json(event);
         } catch (error) {
-            console.error(error);
             throw new AppError("Erro ao buscar o evento.", 500);
         }
     }

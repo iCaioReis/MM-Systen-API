@@ -40,7 +40,7 @@ class CompetitorsController {
             throw new AppError("O campo Nome é obrigatório.", 400);
         }
 
-        if (!CPF || CPF == "___.___.___-__") {
+        if (!CPF || CPF == "___.___.___-__" || CPF === "_ _ _ ._ _ _ ._ _ _ -_ _ ") {
             throw new AppError("O campo CPF é obrigatório.", 400);
         }
 
@@ -140,7 +140,7 @@ class CompetitorsController {
         if (!name) {
             throw new AppError("O campo Nome é obrigatório.", 400);
         }
-        if (!CPF || CPF == "___.___.___-__") {
+        if (!CPF || CPF === "_ _ _ ._ _ _ ._ _ _ -_ _ ") {
             throw new AppError("O campo CPF é obrigatório.", 400);
         }
         if (!born) {
@@ -153,6 +153,15 @@ class CompetitorsController {
 
         if (!competitor) {
             throw new AppError("Competidor não encontrado!");
+        }
+
+        const checkCompetitorExists = await knex("competitors").where({ CPF: CPF }).first();
+
+        console.log(id)
+        console.log(checkCompetitorExists)
+
+        if (checkCompetitorExists && checkCompetitorExists.id != competitor.id) {
+            throw new AppError("Este CPF já está cadastrado!", 422);
         }
 
         await knex("competitors").update({
