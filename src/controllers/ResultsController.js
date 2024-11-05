@@ -27,6 +27,11 @@ class ResultsController {
                                 .select(
                                     "chc.id as competitor_id",
                                     "c.name as competitor_name",
+                                    "c.id as competitor_iddd", //Refatorar depois, o id da categoria está saindo como id do competidor
+                                    "c.gender as competitor_gender",
+                                    "c.CPF as competitor_CPF",
+                                    "c.born as competitor_born",
+                                    "c.category as competitor_category",
                                     "h.name as horse_name",
                                     "h.chip as horse_chip",
                                     "h.gender as horse_gender",
@@ -48,7 +53,13 @@ class ResultsController {
                                 if (!acc[competitorId]) {
                                     acc[competitorId] = {
                                         id: competitorId,
+                                        competitor_iddd: row.competitor_iddd,
                                         competitor_name: row.competitor_name,
+                                        competitor_gender: row.competitor_gender,
+                                        competitor_CPF: row.competitor_CPF,
+                                        competitor_born: row.competitor_born,
+                                        competitor_category: row.competitor_category,
+                                        
                                         horse_name: row.horse_name,
                                         horse_id: row.horse_id,
                                         horse_chip: row.horse_chip,
