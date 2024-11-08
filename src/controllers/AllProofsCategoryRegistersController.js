@@ -45,6 +45,9 @@ class CategoryRegisterController {
             if (existingEntry) {
                 throw new AppError("Registro já existente para o competidor, cavalo e categoria informados.", 409);
             }
+            if(category.state != "active"){
+                throw new AppError('A categoria precisa estar com status "Ativo" em todas as provas para adicionar o novo registro! ')
+            }
         }
 
         // Inserir na tabela "competitor-horse-categorie" para cada categoria encontrada
