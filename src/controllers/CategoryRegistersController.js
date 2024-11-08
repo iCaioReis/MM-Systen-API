@@ -94,9 +94,21 @@ class CategoryRegisterController {
             throw new AppError("Não foi possível atualizar registro!");
         }
 
+        const recordAlreadyExists = await knex("competitor-horse-categorie")
+        .where({
+            competitor_id,
+            horse_id,
+            categorie_id: register.categorie_id
+          })
+        .first();
+
+        if (recordAlreadyExists && recordAlreadyExists.id != id) {
+            throw new AppError("Já existe um registro com este competidor e cavalo nesta categoria!", 500);
+        }
+
         await knex("competitor-horse-categorie").update(
             { competitor_id, horse_id }
-        ).where({ id: id });
+        ).where({ id: id }).returning('*');
 
         return response.json(register);
     }
