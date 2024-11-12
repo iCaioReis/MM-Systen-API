@@ -45,14 +45,23 @@ class CategoryRegisterController {
             if (existingEntry) {
                 throw new AppError("Registro já existente para o competidor, cavalo e categoria informados.", 409);
             }
-            if(category.state != "active"){
+            if (category.state != "active") {
                 throw new AppError('A categoria precisa estar com status "Ativo" em todas as provas para adicionar o novo registro! ')
+            }
+
+            const recordHorses = await knex("competitor-horse-categorie")
+                .where({
+                    horse_id,
+                    categorie_id: category.id
+                })
+            if (recordHorses.length >= 2) {
+                throw new AppError("Este cavalo já está registrado em outros dois competidores nesta categoria!", 400);
             }
         }
 
         // Inserir na tabela "competitor-horse-categorie" para cada categoria encontrada
         const insertedIds = [];
-        
+
         for (const category of categories) {
             // Contar quantos registros já existem para a mesma categoria
             const currentOrderCount = await knex("competitor-horse-categorie")
@@ -64,10 +73,10 @@ class CategoryRegisterController {
 
             // Inserir o registro com o campo competitor_order
             const [id] = await knex("competitor-horse-categorie")
-                .insert({ 
-                    competitor_id, 
-                    horse_id, 
-                    categorie_id: category.id, 
+                .insert({
+                    competitor_id,
+                    horse_id,
+                    categorie_id: category.id,
                     competitor_order: competitorOrder // Adicionar o order
                 })
                 .returning('id');

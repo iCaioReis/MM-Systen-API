@@ -23,6 +23,15 @@ class CategoryRegisterController {
           })
         .first();
 
+        const recordHorses = await knex("competitor-horse-categorie")
+        .where({
+            horse_id,
+            categorie_id
+          })
+        if(recordHorses.length >= 2) {
+            throw new AppError("Este cavalo já está registrado em outros dois competidores nesta categoria!", 400);
+        }
+
         if (recordAlreadyExists) {
             throw new AppError("Já existe um registro com este competidor e cavalo nesta categoria!", 500);
         }
@@ -78,7 +87,7 @@ class CategoryRegisterController {
 
     async update(request, response) {
         const { id } = request.params;
-        const { competitor_id, horse_id } = request.body;
+        const { competitor_id, horse_id, categorie_id } = request.body;
 
         const register = await knex("competitor-horse-categorie").where({ id }).first();
 
@@ -101,6 +110,15 @@ class CategoryRegisterController {
             categorie_id: register.categorie_id
           })
         .first();
+
+        const recordHorses = await knex("competitor-horse-categorie")
+        .where({
+            horse_id,
+            categorie_id
+          })
+        if(recordHorses.length >= 2) {
+            throw new AppError("Este cavalo já está registrado em outros dois competidores nesta categoria!", 400);
+        }
 
         if (recordAlreadyExists && recordAlreadyExists.id != id) {
             throw new AppError("Já existe um registro com este competidor e cavalo nesta categoria!", 500);
