@@ -14,6 +14,7 @@ const registersJudgeRouter = require("./RegistersJudge.routes");
 const categoryRegistersRouter = require("./categoryRegisters.routes");
 const allCategoryRegistersRouter = require("./proofCategoryRegisters.routes");
 const sortCategoryRegistersRouter = require("./sortCategoryRegisters.routes");
+const allCategoryAwardsRouter = require("./proofCategoryAwards.routes");
 
 
 const routes = Router();
@@ -32,5 +33,6 @@ routes.use('/registersJudge', registersJudgeRouter);
 routes.use('/categoryRegisters', categoryRegistersRouter);
 routes.use('/allCategoryRegisters', allCategoryRegistersRouter);
 routes.use('/sortCategoryRegisters', sortCategoryRegistersRouter);
+routes.use('/allCategoryAwards', allCategoryAwardsRouter);
 
 module.exports = routes;
