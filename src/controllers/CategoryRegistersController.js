@@ -51,6 +51,9 @@ class CategoryRegisterController {
                 .select(
                     "categories.name as categorie_name", // Nome da categoria
                     "categories.state as categorie_state", // Estado da categoria
+                    "categories.first_place_award as categorie_first_place_award", // Premiação primeiro lugar da categoria
+                    "categories.second_place_award as categorie_second_place_award", // Premiação segundo lugar da categoria
+                    "categories.third_place_award as categorie_third_place_award", // Premiação terceiro lugar da categoria
                     "categories.last_competitor", // Último competidor
                     "proofs.name as proof_name" // Nome da prova
                 )
